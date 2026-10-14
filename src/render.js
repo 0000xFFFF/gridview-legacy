@@ -172,25 +172,21 @@ function createFile(file) {
     // File info
     let div_file_info = addFileInfo(div_file, file);
 
+    //console.log("createFile: " + file.name);
+
     // Image or video
-    if (
-        file.name.endsWith(".png") ||
-        file.name.endsWith(".jpg") ||
-        file.name.endsWith(".jpeg") ||
-        file.name.endsWith(".gif")
-    ) {
+    if (imageExtensions.includes(file.ext)) {
+
         return addChildImage(div_file, file, div_file_info).then(
             () => div_file,
         ); // Return a promise that resolves to the div_file
-    } else if (
-        file.name.endsWith(".mp4") ||
-        file.name.endsWith(".webm") ||
-        file.name.endsWith(".mov") ||
-        file.name.endsWith(".avi")
-    ) {
+
+    } else if (videoExtensions.includes(file.ext)) {
+
         return addChildVideo(div_file, file, div_file_info).then(
             () => div_file,
         ); // Return a promise that resolves to the div_file
+
     }
     return Promise.resolve(div_file); // Return the div_file if no async media loading is required
 }

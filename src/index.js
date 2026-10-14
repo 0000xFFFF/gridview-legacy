@@ -16,7 +16,10 @@ const thumbDir = path.join(app.getPath("userData"), "thumbs");
 let mainWindow;
 let currentLoadedDirPath = null;
 
-console.log(process.argv);
+
+const { imageExtensions, videoExtensions } = require("./mediaExtensions");
+
+//console.log(process.argv);
 
 // Determine how many args to skip
 const skipCount = app.isPackaged ? 1 : 2;
@@ -50,7 +53,7 @@ app.whenReady().then(async () => {
 
     // If directory was provided in arguments, load it
     if (startupDir) {
-        console.log("startup dir: ", startupDir);
+        //console.log("startup dir: ", startupDir);
         await sendLoadedDirectory(startupDir);
     }
 
@@ -93,6 +96,9 @@ const GET_DIMS = false;
 
 async function generateVideoThumbnail(videoPath) {
     return new Promise((resolve, reject) => {
+
+        //console.log("Generating thumbnail for video:", videoPath);
+
         if (!LOAD_THUMBS) {
             return resolve(null);
         }
@@ -101,6 +107,7 @@ async function generateVideoThumbnail(videoPath) {
             thumbDir,
             path.basename(videoPath) + ".jpg",
         );
+        //console.log("Thumbnail path:", thumbPath);
 
         // Skip if thumbnail already exists
         if (fs.existsSync(thumbPath)) {
@@ -109,6 +116,7 @@ async function generateVideoThumbnail(videoPath) {
 
         // Generate thumbnail with ffmpeg
         const cmd = `ffmpeg -i "${videoPath}" -frames:v 1 -q:v 2 "${thumbPath}" -y`;
+        //console.log("Generating thumbnail with command:", cmd);
 
         exec(cmd, (err) => {
             if (err) {
@@ -244,8 +252,7 @@ async function processDirectories(files, basePath, currentPath, directories) {
 
 async function getMediaFiles(dirPath) {
     mainWindow.setTitle(`GridView - loading ${dirPath}`);
-    const imageExtensions = [".png", ".jpg", ".jpeg", ".gif"];
-    const videoExtensions = [".mp4", ".webm", ".mov", ".avi"];
+
     const mediaFiles = [];
 
     try {
@@ -258,15 +265,17 @@ async function getMediaFiles(dirPath) {
             if (imageExtensions.includes(extname)) {
                 mediaFiles.push({
                     name: file,
+                    path: fullPath,
+                    ext: extname,
                     width: null,
                     height: null,
-                    path: fullPath,
                     type: "image",
                 });
             } else if (videoExtensions.includes(extname)) {
                 mediaFiles.push({
                     name: file,
                     path: fullPath,
+                    ext: extname,
                     type: "video",
                     thumb: null,
                     width: null,

@@ -19,7 +19,7 @@ mediaDirs.addEventListener("drop", (event) => {
     for (const item of items) {
         if (item.kind === "string" && item.type === "text/uri-list") {
             item.getAsString((url) => {
-                console.log(`${url}`);
+                //console.log(`${url}`);
             });
         }
     }
