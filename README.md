@@ -1,3 +1,5 @@
+project development moved to: [gridview](https://github.com/0000xFFFF/gridview)
+
 # <img src="assets/icon.png" width="16"> gridview - masonry grid layout image viewer 
 
 <img src="preview/preview1.gif" width="600" height="600">
